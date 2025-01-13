@@ -33,6 +33,10 @@ const Dashboard = () => {
 
     if (!message.trim()) return;
 
+    if(showwelcome){
+      setshowwelcome(false)
+    }
+
     setChatmessage(prevmessage => [
       ...prevmessage,
       { text: message, sender: "user" },
@@ -74,11 +78,11 @@ const Dashboard = () => {
         <h1 className="p-3 text-center" style={{ color: '#4B5945', fontWeight: 'bold' }}>ChatBuddy</h1>
 
         {showwelcome && (
-          <div className='container d-flex justify-content-center align-items-center' style={{ height: '65vh', backgroundColor: 'white', width: '100%', maxWidth: '900px', padding: '30px', borderRadius: '15px' }}>
-            <div className='container d-flex flex-column justify-content-center align-items-center' style={{ height: '55vh', backgroundColor: '#cfdecc', width: '100%', borderRadius: '10px' }}>
+          <div className='container d-flex justify-content-center align-items-center' style={{height: '65vh', backgroundColor: 'white', width: '100%', maxWidth: '900px', padding: '30px', borderRadius: '15px', overflow: 'hidden'}}>
+            <div className='container d-flex flex-column justify-content-start align-items-center' style={{minHeight: '55vh', maxHeight: '55vh', backgroundColor: '#cfdecc', width: '100%', borderRadius: '10px', overflow: 'auto', padding: '15px' }}>
               <h4 className='text-center' style={{ fontWeight: 'bold', color: '#4B5945' }}>Welcome to ChatBuddy 👋</h4>
               <p className="text-center" style={{ color: '#66785F' }}>I'm here to help you with anything you'd like to know. You can ask me about:</p>
-              <div className='row g-3 d-flex justify-content-center align-items-center' style={{ width: '70%' }}>
+              <div className='row g-3 d-flex justify-content-center align-items-center' style={{ width: '100%' }}>
                 <div className='col-lg-5 col-md-5 col-sm-12 p-2 me-lg-3 me-md-3' style={{ backgroundColor: 'white', borderRadius: '10px' }}>
                   <p>💡 General Knowledge</p>
                 </div>
@@ -102,17 +106,17 @@ const Dashboard = () => {
             <div ref={chatcontainerref} className="mt-3" style={{ width: '100%', overflow: 'auto' }}>
               {chatmessage.map((message, index) => {
                 return (
-                    <div key={index} className={`d-flex mb-3 ${message.sender === "user" ? "justify-content-end align-items-center" : "justify-content-start align-items-center"}`}>
+                  <div key={index} className={`d-flex mb-3 ${message.sender === "user" ? "justify-content-end align-items-center" : "justify-content-start align-items-center"}`}>
                     <div>
-                      {message.sender === "user" ? "" : <img src={bot} alt="Bot" style={{ width: '50px' }} />}
+                      {message.sender === "user" ? "" : <img src={bot} style={{ width: '50px' }}></img>}
                     </div>
-                    <div className={`p-2 ${message.sender === "user" ? "bg-primary text-white" : "bg-light text-dark"}`} style={{ borderRadius: '10px' }}>
+                    <div className={`p-2 ${message.sender === "user" ? "bg-primary text-white" : "bg-light text-dark"}`} style={{ borderRadius: '10px' }} >
                       {message.text}
                     </div>
                     <div>
-                      {message.sender === "user" ? <img src={user} alt="User" style={{ width: '50px' }} /> : ""}
+                      {message.sender === "user" ? <img src={user} style={{ width: '50px' }} /> : ""}
                     </div>
-                  </div>                  
+                  </div>
                 )
               })}
             </div>
