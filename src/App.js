@@ -17,7 +17,7 @@ function App() {
       if (!token) return setIsAuthenticated(false);
 
       try {
-        await axios.post("http://localhost:8080/api/users/validate", { token });
+        await axios.post("https://chatbuddy-backend-1.onrender.comhttps://chatbuddy-backend-1.onrender.com/api/users/validate", { token });
         setIsAuthenticated(true);
       } catch {
         sessionStorage.clear();

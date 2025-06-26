@@ -61,7 +61,7 @@ const Login = () => {
     }
 
     try {
-    const response = await axios.post('http://localhost:8080/api/users/login', loginuser);
+    const response = await axios.post('https://chatbuddy-backend-1.onrender.com/api/users/login', loginuser);
 
     const { token, user } = response.data;
 

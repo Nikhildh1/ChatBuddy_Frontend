@@ -69,7 +69,7 @@ const Signup = () => {
         }
     
         try {
-    await axios.post('http://localhost:8080/api/users/signup', user);
+    await axios.post('https://chatbuddy-backend-1.onrender.com/api/users/signup', user);
     alert("Signup successful! Please login.");
     navigate("/login");
   } catch (error) {
