@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGoogle, faFacebook, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Signup = () => {
 
@@ -59,7 +60,7 @@ const Signup = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault();
     
         // Validate the form before proceeding
@@ -67,19 +68,13 @@ const Signup = () => {
             return; // If validation fails, prevent further action
         }
     
-        const existinguser = JSON.parse(localStorage.getItem('users')) || [];
-        const isexist = existinguser.find((useritem) => useritem.email === user.email);
-    
-        if (isexist) {
-            alert("User already exist with this email!");
-            navigate("/login");
-            return;
-        }
-    
-        existinguser.push(user);
-        localStorage.setItem('users', JSON.stringify(existinguser));
-        alert("Sign up successful!");
-        navigate("/login");
+        try {
+    await axios.post('http://localhost:8080/api/users/signup', user);
+    alert("Signup successful! Please login.");
+    navigate("/login");
+  } catch (error) {
+    alert(error.response?.data || "Signup failed!");
+  }
     };
 
 
@@ -94,13 +89,14 @@ const Signup = () => {
                     <button className='btn text-white p-1' onClick={() => navigate('/login')} style={{ border: '1px solid white', borderRadius: '25px', width: '35%' }}>LOGIN</button>
                 </div>
                 <div className='col-lg-6 col-md-6 col-sm-12 d-flex justify-content-center flex-column'>
-                    <h1 className='text-center mt-2'>Sign Up</h1>
-                    <div className='d-flex justify-content-center flex-wrap mt-3'>
+                    <h1 className="text-center d-sm-none mb-3" style={{ color: '#4B5945', fontWeight: 'bold' }}>ChatBuddy</h1>
+                    <h1 className='text-center mb-4' style={{color:'#4B5945',fontWeight: 'bold'}}>Sign Up</h1>
+                    {/* <div className='d-flex justify-content-center flex-wrap mt-3'>
                         <FontAwesomeIcon icon={faGoogle} size='2x' />
                         <FontAwesomeIcon icon={faFacebook} size='2x' className='ms-3' />
                         <FontAwesomeIcon icon={faLinkedin} size='2x' className='ms-3' />
-                    </div>
-                    <p className='text-center mt-3'>or use your email for registration</p>
+                    </div> */}
+                    {/* <p className='text-center'>se your email for registration</p> */}
                     <form className='d-flex flex-column justify-content-center align-items-center' onSubmit={handleSubmit}>
                         <div className="mb-3 m-auto" style={{ width: '80%' }}>
                             <input type="text" className={`form-control ${signuperror.name ? "is-invalid" : ""}`} name='name' placeholder='Name' onChange={handleInputChange} />
@@ -114,9 +110,9 @@ const Signup = () => {
                             <input type="password" className={`form-control ${signuperror.password ? "is-invalid" : ""}`} name='password' placeholder='Password' onChange={handleInputChange} />
                             {signuperror.password && <div className="invalid-feedback">{signuperror.password}</div>}
                         </div>
-                        <p>Already have an account? <Link to={"/login"}>Login</Link></p>
-                        <a className='text-center mb-2' style={{ color: '#66785F'}}>Forgot your password?</a>
-                        <button className='btn mx-auto text-white' style={{ width: '35%', borderRadius: '25px', backgroundColor: '#66785F' }}>Sign up</button>
+                        <p className='mt-2'>Already have an account? <Link to={"/login"}>Login</Link></p>
+                        {/* <a className='text-center mb-2' style={{ color: '#66785F'}}>Forgot your password?</a> */}
+                        <button className='btn mx-auto text-white mt-2' style={{ width: '35%', borderRadius: '25px', backgroundColor: '#4B5945' }}>Sign up</button>
                     </form>
                 </div>
             </div>

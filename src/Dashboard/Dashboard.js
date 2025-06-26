@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
 import user from "../assets/user.jpg"
 import bot from "../assets/bot.jpg"
+import ReactMarkdown from 'react-markdown';
 const Dashboard = () => {
   const [message, setMessage] = useState("");
   const [responsemessage, setResponseMessage] = useState("");
@@ -75,7 +76,20 @@ const Dashboard = () => {
   return (
     <>
       <div className='container-fluid' style={{ backgroundColor: '#cfdecc', height: '100vh' }}>
-        <h1 className="p-3 text-center" style={{ color: '#4B5945', fontWeight: 'bold' }}>ChatBuddy</h1>
+        {/* <h1 className="p-3 text-center" style={{ color: '#4B5945', fontWeight: 'bold' }}>ChatBuddy</h1> */}
+        <div className="position-relative p-3">
+  <h1 className="text-center m-0" style={{ color: '#4B5945', fontWeight: 'bold' }}>ChatBuddy</h1>
+  <button 
+    className="btn btn-link position-absolute top-0 end-0 mt-1 me-1"
+    onClick={() => {
+      sessionStorage.removeItem('token');
+      window.location.href = '/login';
+    }}
+    title="Logout"
+  >
+    <i className="bi bi-box-arrow-right" style={{ fontSize: '1.8rem', color: '#4B5945' }}></i>
+  </button>
+</div>
 
         {showwelcome && (
           <div className='container d-flex justify-content-center align-items-center' style={{height: '65vh', backgroundColor: 'white', width: '100%', maxWidth: '900px', padding: '30px', borderRadius: '15px', overflow: 'hidden'}}>
@@ -110,9 +124,17 @@ const Dashboard = () => {
                     <div>
                       {message.sender === "user" ? "" : <img src={bot} style={{ width: '50px' }}></img>}
                     </div>
-                    <div className={`p-2 ${message.sender === "user" ? "bg-primary text-white" : "bg-light text-dark"}`} style={{ borderRadius: '10px' }} >
+                    <div className={`p-2 ${message.sender === "user" ? "bg-primary text-white" : "bg-light text-dark"}`} style={{ borderRadius: '10px', maxWidth: '600px', whiteSpace: 'pre-wrap' }}>
+                      <ReactMarkdown
+                      components={{
+                        p: ({ node, ...props }) => (
+                          <p style={{ margin: '2px 0', lineHeight: '1.4' }} {...props} />
+                        )
+                      }}
+                    >
                       {message.text}
-                    </div>
+                    </ReactMarkdown>
+                    </div>  
                     <div>
                       {message.sender === "user" ? <img src={user} style={{ width: '50px' }} /> : ""}
                     </div>

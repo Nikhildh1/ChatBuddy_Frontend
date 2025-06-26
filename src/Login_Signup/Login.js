@@ -4,6 +4,7 @@ import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 import { faFacebook } from '@fortawesome/free-brands-svg-icons';
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Login = () => {
   const [loginuser, setLoginuser] = useState({
@@ -52,27 +53,25 @@ const Login = () => {
     return isValid;
   };
 
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = async(e) => {
     e.preventDefault();
 
     if (!validateLogin()) {
       return;
     }
 
-    const existingUser = JSON.parse(localStorage.getItem('users')) || [];
-    const isExist = existingUser.find((userItem) => userItem.email === loginuser.email);
+    try {
+    const response = await axios.post('http://localhost:8080/api/users/login', loginuser);
 
-    if (isExist) {
-      if (isExist.password === loginuser.password) {
-        localStorage.setItem('loggedinuser', JSON.stringify(isExist));
-        localStorage.setItem('isloggedin', true);
-        navigate('/dashboard');
-      } else {
-        alert('Incorrect Password');
-      }
-    } else {
-      alert('User not found!');
-    }
+    const { token, user } = response.data;
+
+    sessionStorage.setItem('token', token);
+    sessionStorage.setItem('user', JSON.stringify(user));
+
+    navigate('/dashboard');
+  } catch (error) {
+    alert('Login failed!');
+  }
   };
 
   return (
@@ -80,13 +79,14 @@ const Login = () => {
       <div className="container-fluid d-flex justify-content-center align-items-center px-0" style={{ height: '100vh', backgroundColor: '#cfdecc' }}>
         <div className="row w-75 container d-flex px-0" style={{ height: '80%', overflow: 'hidden', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.6)', borderRadius: '15px' }}>
           <div className="col-lg-6 col-md-6 col-sm-12 order-sm-0 d-flex justify-content-center flex-column">
-            <h1 className="text-center">Login</h1>
-            <div className="d-flex justify-content-center flex-wrap mt-4">
+            <h1 className="text-center d-sm-none mb-3" style={{ color: '#4B5945', fontWeight: 'bold' }}>ChatBuddy</h1>
+            <h1 className="text-center mb-4" style={{color:'#4B5945', fontWeight: 'bold'}}>Login</h1>
+            {/* <div className="d-flex justify-content-center flex-wrap mt-4">
               <FontAwesomeIcon icon={faGoogle} size="2x" />
               <FontAwesomeIcon icon={faFacebook} size="2x" className="ms-3" />
               <FontAwesomeIcon icon={faLinkedin} size="2x" className="ms-3" />
-            </div>
-            <p className="text-center mt-4">or use your account</p>
+            </div> */}
+            {/* <p className="text-center">Use your account</p> */}
             <form className="d-flex flex-column justify-content-center align-items-center" onSubmit={handleLoginSubmit}>
               <div className="mb-3 m-auto" style={{ width: '80%' }}>
                 <input
@@ -110,11 +110,11 @@ const Login = () => {
                 />
                 {loginError.password && <div className="invalid-feedback">{loginError.password}</div>}
               </div>
-              <p>Don't have an account? <Link to={"/signup"}>Signup</Link></p>
-              <a className="text-center mb-3" style={{ color: '#66785F' }}>
+              <p className='mt-2'>Don't have an account? <Link to={"/signup"}>Signup</Link></p>
+              {/* <a className="text-center mb-3" style={{ color: '#66785F' }}>
                 Forgot your password?
-              </a>
-              <button className="btn mx-auto text-white" style={{ width: '35%', borderRadius: '25px', backgroundColor: '#66785F' }}>
+              </a> */}
+              <button className="btn mx-auto text-white" style={{ width: '35%', borderRadius: '25px', backgroundColor: '#4B5945' }}>
                 Login
               </button>
             </form>
